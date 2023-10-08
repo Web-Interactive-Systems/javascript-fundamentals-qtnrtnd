@@ -1,19 +1,25 @@
 // TODO: Fix the errors in the functions below!
 
 const functions = {
-  addClickListener(element, callback) {},
+  addClickListener(element, callback) {
+    element.addEventListener('click', callback);
+  },
 
-  removeClickListener(element, callback) {},
+  removeClickListener(element, callback) {
+    element.removeEventListener('click', callback);
+  },
 
-  addKeyDownListener(element, callback) {},
+  addKeyDownListener(element, callback) {
+    element.addEventListener('keydown', callback);
+  },
 
-  removeKeyDownListener(element, callback) {},
+  removeKeyDownListener(element, callback) {
+    element.removeEventListener('keydown', callback);
+  },
 
-  addClickWithCaptureListener(element, callback) {
-    let clickCount;
-
+  addClickWithCaptureListener(element, clickCount = 0) {
     const captureListener = () => {
-      clickCount;
+      clickCount++;
     };
 
     const bubbleListener = () => {
@@ -21,20 +27,25 @@ const functions = {
     };
 
     // addEventListener 'click', handler, true/false
+    element.addEventListener('click', captureListener, true);
+    element.addEventListener('click', bubbleListener, false);
   },
 
-  addClickWithBubbleListener(element) {
-    let count;
-
+  addClickWithBubbleListener(element, count = 0) {
     const handleClick = (event) => {
-      // https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
+      // https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation7
+      if (event.target !== element) {
+        event.stopPropagation();
+      }else {
+        count++;
+      }
     };
 
     element.addEventListener('click', handleClick);
 
     return () => {
       // remove event listener
-      //
+      element.removeEventListener('click', handleClick);
       return count;
     };
   },
